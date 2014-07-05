@@ -4,6 +4,8 @@ import com.google.common.primitives.UnsignedBytes;
 
 import org.apache.commons.codec.binary.Hex;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 
 import javax.annotation.Nullable;
@@ -32,6 +34,11 @@ final class KeyImpl implements Key {
   @Override
   public byte[] toByteArray() {
     return Arrays.copyOf(bytes, KEY_LENGTH_BYTES);
+  }
+
+  @Override
+  public void writeTo(OutputStream stream) throws IOException {
+    stream.write(bytes);
   }
 
   @Override

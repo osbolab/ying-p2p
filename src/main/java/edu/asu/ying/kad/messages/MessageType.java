@@ -12,20 +12,19 @@ public enum MessageType {
   Ack((byte) 127),
   FoundNodes((byte) 128),
   FoundValue((byte) 129);
-
-  public static MessageType fromValue(int i) {
-    for (MessageType type : values()) {
-      if (type.toByte() == i) {
-        return type;
-      }
-    }
-    return null;
-  }
-
   private final byte value;
 
   private MessageType(byte value) {
     this.value = value;
+  }
+
+  public static MessageType fromValue(int i) {
+    for (MessageType type : values()) {
+      if ((type.toByte() & 0xFF) == i) {
+        return type;
+      }
+    }
+    return null;
   }
 
   public byte toByte() {

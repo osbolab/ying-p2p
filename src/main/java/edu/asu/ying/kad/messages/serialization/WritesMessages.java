@@ -6,6 +6,7 @@ import edu.asu.ying.kad.messages.AckMessage;
 import edu.asu.ying.kad.messages.FindNodesMessage;
 import edu.asu.ying.kad.messages.FindValueMessage;
 import edu.asu.ying.kad.messages.FoundNodesMessage;
+import edu.asu.ying.kad.messages.FoundValueMessage;
 import edu.asu.ying.kad.messages.StoreMessage;
 import edu.asu.ying.kad.messages.SynMessage;
 
@@ -18,6 +19,8 @@ public interface WritesMessages {
   public void write(AckMessage message) throws IOException;
 
   public void write(FindValueMessage message) throws IOException;
+
+  public void write(FoundValueMessage message) throws IOException;
 
   public void write(FindNodesMessage message) throws IOException;
 

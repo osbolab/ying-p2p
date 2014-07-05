@@ -12,6 +12,7 @@ import edu.asu.ying.kad.messages.AckMessage;
 import edu.asu.ying.kad.messages.FindNodesMessage;
 import edu.asu.ying.kad.messages.FindValueMessage;
 import edu.asu.ying.kad.messages.FoundNodesMessage;
+import edu.asu.ying.kad.messages.FoundValueMessage;
 import edu.asu.ying.kad.messages.KadMessage;
 import edu.asu.ying.kad.messages.StoreMessage;
 import edu.asu.ying.kad.messages.SynMessage;
@@ -45,13 +46,21 @@ public final class MessageOutputStream extends OutputStream implements WritesMes
   @Override
   public void write(FindValueMessage message) throws IOException {
     write((KadMessage) message);
-    stream.write(message.findKey().toByteArray());
+    message.findKey().writeTo(stream);
+  }
+
+  @Override
+  public void write(FoundValueMessage message) throws IOException {
+    write((KadMessage) message);
+    message.foundKey().writeTo(stream);
+    stream.writeInt(message.valueLength());
+    message.writeValueTo(stream);
   }
 
   @Override
   public void write(FindNodesMessage message) throws IOException {
     write((KadMessage) message);
-    stream.write(message.findKey().toByteArray());
+    message.findKey().writeTo(stream);
   }
 
   @Override
@@ -59,7 +68,7 @@ public final class MessageOutputStream extends OutputStream implements WritesMes
     write((KadMessage) message);
     stream.writeInt(message.nodes().size());
     for (RemoteNode node : message.nodes()) {
-      stream.write(node.key().toByteArray());
+      node.key().writeTo(stream);
       Endpoint endpoint = node.endpoint();
       stream.writeInt(endpoint.port());
       stream.write(endpoint.inetAddress().getAddress());
@@ -69,15 +78,16 @@ public final class MessageOutputStream extends OutputStream implements WritesMes
   @Override
   public void write(StoreMessage message) throws IOException {
     write((KadMessage) message);
-    stream.write(message.storeKey().toByteArray());
-    stream.write(message.storeValue());
+    message.storeKey().writeTo(stream);
+    stream.writeInt(message.valueLength());
+    message.writeValueTo(stream);
   }
 
   private void write(KadMessage message) throws IOException {
     stream.write(message.type().toByte());
     stream.writeInt(message.id());
     stream.writeInt(message.senderPort());
-    stream.write(message.senderKey().toByteArray());
+    message.senderKey().writeTo(stream);
   }
 
   @Override

@@ -1,5 +1,7 @@
 package edu.asu.ying.kad;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -10,8 +12,7 @@ import java.util.Random;
  */
 public final class KeyBuilder {
 
-  private static final class RandomHolder {
-    private static final Random RANDOM = new Random();
+  private KeyBuilder() {
   }
 
   /**
@@ -31,9 +32,7 @@ public final class KeyBuilder {
 
   public static Key from(InputStream stream) throws IOException {
     byte[] bytes = new byte[KeyImpl.KEY_LENGTH_BYTES];
-    if (stream.read(bytes) != KeyImpl.KEY_LENGTH_BYTES) {
-      throw new IOException("End of stream reached while reading key.");
-    }
+    IOUtils.readFully(stream, bytes);
     return new KeyImpl(bytes);
   }
 
@@ -44,6 +43,7 @@ public final class KeyBuilder {
     return new KeyImpl(bytes);
   }
 
-  private KeyBuilder() {
+  private static final class RandomHolder {
+    private static final Random RANDOM = new Random();
   }
 }

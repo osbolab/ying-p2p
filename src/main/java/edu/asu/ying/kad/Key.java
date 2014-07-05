@@ -1,5 +1,7 @@
 package edu.asu.ying.kad;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Comparator;
 
 /**
@@ -11,6 +13,8 @@ public interface Key extends Comparable<Key> {
    * Gets a copy of the byte array representing this key.
    */
   byte[] toByteArray();
+
+  void writeTo(OutputStream stream) throws IOException;
 
   /**
    * Returns a new key that is the exclusive bitwise OR of this and the given key.

@@ -1,5 +1,6 @@
 package edu.asu.ying.kad.messages;
 
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import edu.asu.ying.kad.Key;
@@ -35,5 +36,26 @@ public abstract class KadMessage {
 
   public int senderPort() {
     return port;
+  }
+
+  @Override
+  public boolean equals(@Nullable Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || !getClass().isAssignableFrom(o.getClass())) {
+      return false;
+    }
+    KadMessage that = (KadMessage) o;
+    return type == that.type && id == that.id && port == that.port && key.equals(that.key);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = type.hashCode();
+    result = 31 * result + id;
+    result = 31 * result + key.hashCode();
+    result = 31 * result + port;
+    return result;
   }
 }
